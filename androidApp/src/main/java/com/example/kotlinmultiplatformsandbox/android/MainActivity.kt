@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.kotlinmultiplatformsandbox.Greeting
+import androidx.compose.runtime.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(Greeting().greet())
+                    var text by remember { mutableStateOf("Loading") }
+                    LaunchedEffect(true) {
+                        text = try {
+                            Greeting().greet()
+                        } catch (e: Exception) {
+                            e.localizedMessage ?: "error"
+                        }
+                    }
+                    GreetingView(text)
                 }
             }
         }
